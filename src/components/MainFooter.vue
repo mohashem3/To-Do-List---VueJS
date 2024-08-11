@@ -34,15 +34,30 @@ export default {
 </template>
 
 <style scoped>
+/* Ensure the html and body elements are full height */
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+/* Main content area should push the footer to the bottom */
+.main-content {
+  min-height: 100%;
+  padding-bottom: 60px; /* Adjust this value to the height of your footer */
+}
+
+/* Footer Styling */
 footer {
   background-color: #000000;
   color: #fff;
   font-size: 14px;
+  position: relative; /* Changed from fixed */
   bottom: 0;
-  position: fixed;
   left: 0;
   right: 0;
   text-align: center;
+  padding: 10px 0; /* Padding for spacing */
   z-index: 999;
 }
 
