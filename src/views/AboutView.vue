@@ -48,9 +48,6 @@
             </div>
           </div>
         </div>
-        <div class="sec-title">
-          <span class="title">Our Future Goal</span>
-        </div>
       </div>
     </section>
   </main>
