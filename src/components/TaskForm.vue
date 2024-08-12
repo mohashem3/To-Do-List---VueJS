@@ -234,7 +234,7 @@ input:focus {
 }
 
 .task-form-container.highlight {
-  animation: glow 1.5s ease-in-out;
+  animation: glow 1.8s ease-in-out;
 }
 
 @keyframes glow {
