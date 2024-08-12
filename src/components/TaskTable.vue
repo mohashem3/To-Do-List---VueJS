@@ -1,5 +1,6 @@
 <script>
 import axios from 'axios'
+import Swal from 'sweetalert2'
 import { eventBus } from '@/services/EventBus'
 
 export default {
@@ -37,7 +38,7 @@ export default {
           this.tasks = res.data
           this.tasks.forEach((task) => {
             if (this.checkedTasks.has(task.id) && task.status !== 'done') {
-              this.toggleTaskStatus(task)
+              this.setTaskStatus(task, 'done')
             }
           })
         })
@@ -45,20 +46,12 @@ export default {
           console.error('Error fetching tasks:', error)
         })
     },
-    toggleTaskStatus(task) {
-      const statusMap = {
-        pending: 'in_progress',
-        in_progress: 'done',
-        done: 'pending'
-      }
-
-      const newStatus = statusMap[task.status]
-
+    setTaskStatus(task, status) {
       axios
-        .patch(`https://todo.nafistech.com/api/tasks/${task.id}`, { status: newStatus })
+        .patch(`https://todo.nafistech.com/api/tasks/${task.id}`, { status })
         .then(() => {
-          task.status = newStatus
-          if (newStatus === 'done') {
+          task.status = status
+          if (status === 'done') {
             this.checkedTasks.add(task.id)
           } else {
             this.checkedTasks.delete(task.id)
@@ -69,13 +62,26 @@ export default {
           console.error('Error updating task status:', error)
         })
     },
+    toggleTaskStatus(task) {
+      const statusMap = {
+        pending: 'in_progress',
+        in_progress: 'done',
+        done: 'pending'
+      }
+      const newStatus = statusMap[task.status]
+      this.setTaskStatus(task, newStatus)
+    },
+    toggleCheckbox(task) {
+      const newStatus = task.status === 'done' ? 'pending' : 'done'
+      this.setTaskStatus(task, newStatus)
+    },
     toggleAll(event) {
       const isChecked = event.target.checked
       this.tasks.forEach((task) => {
         if (task.status !== 'done' && isChecked) {
-          this.toggleTaskStatus(task)
+          this.setTaskStatus(task, 'done')
         } else if (task.status === 'done' && !isChecked) {
-          this.toggleTaskStatus(task)
+          this.setTaskStatus(task, 'pending')
         }
       })
     },
@@ -84,16 +90,28 @@ export default {
       this.scrollToForm()
     },
     deleteTask(taskId) {
-      if (window.confirm('Are you sure you want to delete this task?')) {
-        axios
-          .delete(`https://todo.nafistech.com/api/tasks/${taskId}`)
-          .then(() => {
-            this.tasks = this.tasks.filter((task) => task.id !== taskId)
-          })
-          .catch((error) => {
-            console.error('Error deleting task:', error)
-          })
-      }
+      Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#41b883',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          axios
+            .delete(`https://todo.nafistech.com/api/tasks/${taskId}`)
+            .then(() => {
+              this.tasks = this.tasks.filter((task) => task.id !== taskId)
+              Swal.fire('Deleted!', 'Your task has been deleted.', 'success')
+            })
+            .catch((error) => {
+              console.error('Error deleting task:', error)
+              Swal.fire('Error!', 'There was an error deleting your task.', 'error')
+            })
+        }
+      })
     },
     scrollToForm() {
       const formElement = document.querySelector('.task-form-container')
@@ -115,7 +133,6 @@ export default {
 </script>
 
 <template>
-  <!-- <h1>Tasks</h1> -->
   <div class="container task-table-container">
     <div class="content">
       <div class="container">
@@ -148,8 +165,8 @@ export default {
                   <label class="control control--checkbox">
                     <input
                       type="checkbox"
-                      @click="toggleTaskStatus(task)"
-                      :checked="checkedTasks.has(task.id)"
+                      @click="toggleCheckbox(task)"
+                      :checked="task.status === 'done'"
                     />
                     <div class="control__indicator" v-if="showTextBox"></div>
                   </label>

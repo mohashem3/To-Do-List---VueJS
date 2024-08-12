@@ -1,32 +1,6 @@
-<template>
-  <div class="container task-form-container">
-    <!-- START Form -->
-    <div class="form-container sign-in-container">
-      <form>
-        <h1>{{ model.task.id ? 'Edit Task' : 'Add Task' }}</h1>
-        <p>Fill out the details below</p>
-
-        <!-- Display error list if there are validation errors -->
-        <ul class="alert alert-warning" v-if="errorList.length > 0">
-          <li class="mb-0 ms-3" v-for="(error, index) in errorList" :key="index">
-            {{ error }}
-          </li>
-        </ul>
-
-        <input type="text" placeholder="Task Name" v-model="model.task.title" />
-        <input type="text" placeholder="Task Description" v-model="model.task.description" />
-
-        <button type="button" @click="submitTask">
-          {{ model.task.id ? 'Update' : 'Add' }}
-        </button>
-      </form>
-    </div>
-    <!-- END Form -->
-  </div>
-</template>
-
 <script>
 import axios from 'axios'
+import Swal from 'sweetalert2'
 import { eventBus } from '@/services/EventBus'
 
 export default {
@@ -53,7 +27,11 @@ export default {
     },
     submitTask() {
       if (!this.model.task.title || !this.model.task.description) {
-        alert('All fields must be filled')
+        Swal.fire({
+          icon: 'warning',
+          title: 'Incomplete fields',
+          text: 'All fields must be filled'
+        })
         return
       }
 
@@ -67,10 +45,15 @@ export default {
       axios
         .post('https://todo.nafistech.com/api/tasks', this.model.task)
         .then((res) => {
-          const message = res.message || 'Task added successfully!'
-          alert(message)
-          this.clearForm()
-          eventBus.value.dispatchEvent(new Event('task-added'))
+          const message = res.data.message || 'Task added successfully!'
+          Swal.fire({
+            icon: 'success',
+            title: 'Success',
+            text: message
+          }).then(() => {
+            this.clearForm()
+            eventBus.value.dispatchEvent(new Event('task-added'))
+          })
         })
         .catch((error) => {
           this.handleError(error)
@@ -80,10 +63,15 @@ export default {
       axios
         .patch(`https://todo.nafistech.com/api/tasks/${this.model.task.id}`, this.model.task)
         .then((res) => {
-          const message = res.message || 'Task updated successfully!'
-          alert(message)
-          this.clearForm()
-          eventBus.value.dispatchEvent(new Event('task-updated'))
+          const message = res.data.message || 'Task updated successfully!'
+          Swal.fire({
+            icon: 'success',
+            title: 'Success',
+            text: message
+          }).then(() => {
+            this.clearForm()
+            eventBus.value.dispatchEvent(new Event('task-updated'))
+          })
         })
         .catch((error) => {
           this.handleError(error)
@@ -104,6 +92,11 @@ export default {
       } else {
         this.errorList = ['An unexpected error occurred']
       }
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: this.errorList.join(', ')
+      })
       console.error('Error:', error)
     }
   },
@@ -112,6 +105,33 @@ export default {
   }
 }
 </script>
+
+<template>
+  <div class="container task-form-container">
+    <!-- START Form -->
+    <div class="form-container sign-in-container">
+      <form>
+        <h1>{{ model.task.id ? 'Edit Task' : 'Add Task' }}</h1>
+        <p>Fill out the details below</p>
+
+        <!-- Display error list if there are validation errors -->
+        <ul class="alert alert-warning" v-if="errorList.length > 0">
+          <li class="mb-0 ms-3" v-for="(error, index) in errorList" :key="index">
+            {{ error }}
+          </li>
+        </ul>
+
+        <input type="text" placeholder="Task Name" v-model="model.task.title" />
+        <input type="text" placeholder="Task Description" v-model="model.task.description" />
+
+        <button type="button" @click="submitTask">
+          {{ model.task.id ? 'Update' : 'Add' }}
+        </button>
+      </form>
+    </div>
+    <!-- END Form -->
+  </div>
+</template>
 
 <style scoped>
 @import url('https://fonts.googleapis.com/css?family=Montserrat:400,800');
