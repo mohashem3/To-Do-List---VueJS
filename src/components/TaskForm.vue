@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container task-form-container">
     <!-- START Form -->
     <div class="form-container sign-in-container">
       <form>
@@ -231,5 +231,21 @@ input:focus {
   left: 0;
   width: 100%;
   z-index: 2;
+}
+
+.task-form-container.highlight {
+  animation: glow 1.5s ease-in-out;
+}
+
+@keyframes glow {
+  0% {
+    box-shadow: 0 0 10px #ff0000;
+  }
+  50% {
+    box-shadow: 0 0 20px #ff0000;
+  }
+  100% {
+    box-shadow: 0 0 10px #ff0000;
+  }
 }
 </style>

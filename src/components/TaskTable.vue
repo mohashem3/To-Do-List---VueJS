@@ -81,6 +81,7 @@ export default {
     },
     editTask(task) {
       eventBus.value.dispatchEvent(new CustomEvent('task-edit', { detail: task }))
+      this.scrollToForm()
     },
     deleteTask(taskId) {
       if (window.confirm('Are you sure you want to delete this task?')) {
@@ -92,6 +93,17 @@ export default {
           .catch((error) => {
             console.error('Error deleting task:', error)
           })
+      }
+    },
+    scrollToForm() {
+      const formElement = document.querySelector('.task-form-container')
+      if (formElement) {
+        formElement.scrollIntoView({ behavior: 'smooth' })
+        // Add a class to trigger the glow effect
+        formElement.classList.add('highlight')
+        setTimeout(() => {
+          formElement.classList.remove('highlight')
+        }, 1500) // Remove the highlight after 1.5 seconds
       }
     },
     beforeUnmount() {
