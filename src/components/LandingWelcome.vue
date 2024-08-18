@@ -80,7 +80,7 @@ body {
 }
 
 .nafis {
-  color: #fff;
+  color: #ffffff;
 }
 
 .main-container {
@@ -141,7 +141,8 @@ body {
 }
 
 .left-section button:hover {
-  background-color: #a8cd9f;
+  background-color: #dadada;
+  color: #41b883;
 }
 
 .left-section button:active {

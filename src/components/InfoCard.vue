@@ -148,18 +148,19 @@ body {
 
 .card {
   border-radius: 16px;
-  box-shadow: 0 30px 30px -25px rgba(65, 51, 183, 0.25);
+  box-shadow: 0 30px 30px -25px #a3fed2;
   max-width: 300px;
 }
 
 .information {
   background-color: var(--c-white);
   padding: 1.5rem;
+  border-color: #a3fed2;
 }
 .information .tag {
   display: inline-block;
-  background-color: var(--c-titan-white);
-  color: var(--c-indigo);
+  background-color: #dcffee;
+  color: #41b883;
   font-weight: 600;
   font-size: 0.875rem;
   padding: 0.5em 0.75em;
@@ -187,8 +188,8 @@ body {
   font: inherit;
   line-height: 1;
   background-color: var(--c-white);
-  border: 2px solid var(--c-indigo);
-  color: var(--c-indigo);
+  border: 2px solid #41b883;
+  color: #41b883;
   padding: 0.5em 1em;
   border-radius: 6px;
   font-weight: 500;
@@ -199,7 +200,7 @@ body {
 }
 .information .button:hover,
 .information .button:focus {
-  background-color: var(--c-indigo);
+  background-color: #41b883;
   color: var(--c-white);
 }
 .information .details {
@@ -208,7 +209,7 @@ body {
 }
 .information .details div {
   padding: 0.75em 1em;
-  background-color: var(--c-titan-white);
+  background-color: #ddffef;
   border-radius: 8px;
   display: flex;
   flex-direction: column-reverse;
@@ -217,10 +218,10 @@ body {
 }
 .information .details dt {
   font-size: 0.875rem;
-  color: var(--c-cold-purple);
+  color: #41b883;
 }
 .information .details dd {
-  color: var(--c-indigo);
+  color: #41b883;
   font-weight: 600;
   font-size: 1.25rem;
 }
@@ -229,6 +230,7 @@ body {
   padding: 10px;
   background-color: var(--c-white);
   color: var(--c-del-rio);
+  border-color: #a3fed2;
 }
 .plan strong {
   font-weight: 600;
@@ -237,7 +239,7 @@ body {
 .plan .inner {
   padding: 20px;
   padding-top: 40px;
-  background-color: var(--c-fair-pink);
+  background-color: #ddffef;
   border-radius: 12px;
   position: relative;
   overflow: hidden;
@@ -246,7 +248,7 @@ body {
   position: absolute;
   top: 0;
   right: 0;
-  background-color: var(--c-apricot);
+  background-color: #a3fed2;
   border-radius: 99em 0 0 99em;
   display: flex;
   align-items: center;
@@ -256,7 +258,7 @@ body {
   color: var(--c-coffee);
 }
 .plan .pricing small {
-  color: var(--c-del-rio);
+  color: #41b883;
   font-size: 0.75em;
   margin-left: 0.25em;
 }
@@ -272,8 +274,7 @@ body {
   margin-top: 1rem;
 }
 .plan .features {
-  display: flex;
-  flex-direction: column;
+  display: contents;
 }
 .plan .features li {
   display: flex;
@@ -302,7 +303,7 @@ body {
 }
 .plan button {
   font: inherit;
-  background-color: var(--c-indigo);
+  background-color: #00ca6f;
   border-radius: 6px;
   color: var(--c-white);
   font-weight: 500;
@@ -313,6 +314,6 @@ body {
 }
 .plan button:hover,
 .plan button:focus {
-  background-color: var(--c-governor);
+  background-color: #41b883;
 }
 </style>
