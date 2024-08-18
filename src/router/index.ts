@@ -79,15 +79,20 @@ const router = createRouter({
   routes
 })
 
-// router.beforeEach((to, from, next) => {
-//   const isLoggedIn = !!localStorage.getItem('authToken')
+// Navigation Guard to check authentication
+router.beforeEach((to, from, next) => {
+  const isLoggedIn = !!localStorage.getItem('authToken')
 
-//   if (to.meta.requiresAuth && !isLoggedIn) {
-//     // Store the intended path in the router query parameters
-//     next({ name: 'login', query: { redirect: to.fullPath } })
-//   } else {
-//     next()
-//   }
-// })
+  if (to.matched.some((record) => record.meta.requiresAuth) && !isLoggedIn) {
+    // Trigger the login popup and prevent navigation
+    window.dispatchEvent(new CustomEvent('show-login-popup'))
 
+    // Store the intended route
+    localStorage.setItem('intendedRoute', to.fullPath)
+
+    next(false) // Cancel navigation
+  } else {
+    next() // Continue with navigation
+  }
+})
 export default router

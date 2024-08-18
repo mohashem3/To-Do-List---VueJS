@@ -107,6 +107,11 @@ export default {
           window.location.reload() // Force page reload after confirmation
         })
       })
+    },
+    handleLoginSuccess() {
+      const intendedRoute = localStorage.getItem('intendedRoute') || '/'
+      localStorage.removeItem('intendedRoute') // Clear the intended route
+      this.$router.push(intendedRoute)
     }
   }
 }
