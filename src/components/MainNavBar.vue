@@ -1,19 +1,10 @@
-<script>
-export default {
-  name: 'NavBar'
-}
-</script>
-<!-- END Script -->
-
-<!-- START Template -->
 <template>
   <nav class="navbar navbar-expand-lg navbar-dark">
     <div class="container">
-      <!-- Logo -->
       <a class="navbar-brand" href="/">
         <img src="@/assets/img/to-do.svg" alt="Home" class="todo-icon" />
       </a>
-      <a class="navbar-brand" href="/">Nafis To-Do</a>
+      <a class="navbar-brand" href="/"><strong>NAFIS TO-DO</strong></a>
 
       <button
         class="navbar-toggler"
@@ -29,60 +20,157 @@ export default {
 
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-          <!-- Home -->
           <li class="nav-item">
-            <router-link to="/" class="nav-link" exact-active-class="active">Home</router-link>
+            <router-link to="/" class="nav-link" exact-active-class="active">HOME</router-link>
           </li>
-
-          <!-- Tasks -->
           <li class="nav-item">
             <router-link to="/taskview" class="nav-link" exact-active-class="active"
-              >To-Do</router-link
+              >TO-DO</router-link
+            >
+          </li>
+          <li class="nav-item">
+            <router-link to="/about" class="nav-link" exact-active-class="active"
+              >ABOUT US</router-link
             >
           </li>
 
-          <!-- About Us -->
-          <li class="nav-item">
-            <router-link to="/about" class="nav-link" exact-active-class="active"
-              >About Us</router-link
-            >
+          <li v-if="!isLoggedIn" class="nav-item">
+            <a class="nav-link" @click.prevent="toggleLoginPopup">LOG IN</a>
+          </li>
+
+          <li v-if="!isLoggedIn" class="nav-item">
+            <a class="nav-link" @click.prevent="toggleSignupPopup">SIGN UP</a>
+          </li>
+
+          <li v-if="isLoggedIn" class="nav-item">
+            <a class="nav-link" @click.prevent="logout">LOG OUT</a>
           </li>
         </ul>
       </div>
     </div>
+
+    <!-- Pass the login logic directly to the Login component -->
+    <Login
+      :showPopup="showLoginPopup"
+      @update:showPopup="showLoginPopup = $event"
+      @login-success="handleLoginSuccess"
+    />
+    <SignUp :showPopup="showSignupPopup" @update:showPopup="showSignupPopup = $event" />
   </nav>
 </template>
 
-<!-- END Template -->
+<script>
+import Login from '@/components/Login.vue'
+import SignUp from '@/components/SignUp.vue'
+import Swal from 'sweetalert2'
+import axios from 'axios'
 
-<!-- START Styles -->
+export default {
+  components: {
+    Login,
+    SignUp
+  },
+  data() {
+    return {
+      showLoginPopup: false,
+      showSignupPopup: false
+    }
+  },
+  computed: {
+    isLoggedIn() {
+      return !!localStorage.getItem('authToken')
+    }
+  },
+  created() {
+    // Listen for the custom event to show the login popup
+    window.addEventListener('show-login-popup', this.toggleLoginPopup)
+  },
+  beforeUnmount() {
+    // Clean up the event listener when the component is destroyed
+    window.removeEventListener('show-login-popup', this.toggleLoginPopup)
+  },
+  methods: {
+    toggleLoginPopup() {
+      this.showLoginPopup = !this.showLoginPopup
+    },
+    toggleSignupPopup() {
+      this.showSignupPopup = !this.showSignupPopup
+    },
+    login(email, password) {
+      axios
+        .post('https://todo.nafistech.com/api/login', { email, password })
+        .then((response) => {
+          const { token } = response.data
+          localStorage.setItem('authToken', token) // Save token
+          this.$emit('update:showPopup', false) // Close popup
+
+          // Notify login success with SweetAlert2
+          Swal.fire({
+            icon: 'success',
+            title: 'You have successfully logged in!',
+            confirmButtonText: 'OK'
+          }).then(() => {
+            window.location.reload() // Refresh the page after clicking OK
+          })
+        })
+        .catch(() => {
+          Swal.fire({
+            icon: 'error',
+            title: 'Invalid email or password.',
+            confirmButtonText: 'OK'
+          })
+        })
+    },
+    logout() {
+      localStorage.removeItem('authToken') // Remove the token from local storage
+      Swal.fire({
+        icon: 'success',
+        title: 'Logged Out',
+        text: 'You have successfully logged out!',
+        confirmButtonText: 'OK'
+      }).then(() => {
+        this.$router.push('/').then(() => {
+          window.location.reload() // Force page reload after confirmation
+        })
+      })
+    },
+    handleLoginSuccess() {
+      this.showLoginPopup = false
+      Swal.fire({
+        icon: 'success',
+        title: 'Logged In',
+        text: 'You have successfully logged out!',
+        confirmButtonText: 'OK'
+      }).then(() => {
+        window.location.reload() // Reload after OK
+      })
+    }
+  }
+}
+</script>
+
 <style scoped>
 .navbar {
   background-color: rgb(0, 0, 0);
+  width: 100%;
 }
-
 .todo-icon {
   width: 40px;
   height: 40px;
   vertical-align: middle;
 }
-
 .nav-link {
-  color: white; /* Initial color */
+  color: white;
   transition:
     color 0.3s,
-    transform 0.3s; /* Smooth transition */
+    transform 0.3s;
+  cursor: pointer;
 }
-
 .nav-link:hover {
-  color: #41b883; /* Color on hover */
-  transform: scale(1.1); /* Slightly enlarge on hover */
+  color: #41b883;
+  transform: scale(1.1);
 }
-
 .nav-link.active {
-  color: #41b883; /* Color for active link */
-  transform: scale(1); /* Ensure no scaling on active state */
+  color: #41b883;
 }
 </style>
-
-<!-- END Styles -->

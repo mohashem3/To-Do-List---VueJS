@@ -42,8 +42,13 @@ export default {
       }
     },
     addTask() {
+      const token = localStorage.getItem('authToken')
       axios
-        .post('https://todo.nafistech.com/api/tasks', this.model.task)
+        .post('https://todo.nafistech.com/api/tasks', this.model.task, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        })
         .then((res) => {
           const message = res.data.message || 'Task added successfully!'
           Swal.fire({
@@ -60,8 +65,13 @@ export default {
         })
     },
     updateTask() {
+      const token = localStorage.getItem('authToken')
       axios
-        .patch(`https://todo.nafistech.com/api/tasks/${this.model.task.id}`, this.model.task)
+        .patch(`https://todo.nafistech.com/api/tasks/${this.model.task.id}`, this.model.task, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        })
         .then((res) => {
           const message = res.data.message || 'Task updated successfully!'
           Swal.fire({

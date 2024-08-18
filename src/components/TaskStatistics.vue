@@ -45,8 +45,13 @@ export default {
   },
   methods: {
     getTasks() {
+      const token = localStorage.getItem('authToken')
       axios
-        .get('https://todo.nafistech.com/api/tasks')
+        .get('https://todo.nafistech.com/api/tasks', {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        })
         .then((response) => {
           this.tasks = response.data
           this.calculateTaskCounts()

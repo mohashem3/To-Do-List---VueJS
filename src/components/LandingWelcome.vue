@@ -2,11 +2,15 @@
   <div class="main-container">
     <div class="container">
       <div class="left-section">
-        <h1>Stay Organized with Nafis To-Do</h1>
-        <h4>Effortlessly manage your tasks—add, edit, and delete with ease.</h4>
-        <router-link to="/taskview" class="nav-link">
-          <button>Add My Tasks</button>
-        </router-link>
+        <h1 v-if="isLoggedIn">Welcome, {{ name }}</h1>
+        <h1 v-else>Stay Organized with <strong class="nafis">NAFIS TO-DO</strong></h1>
+
+        <h4 v-if="isLoggedIn">Ready to add more tasks?</h4>
+        <h4 v-else>Effortlessly manage your tasks—add, edit, and delete with ease.</h4>
+
+        <button @click="handleButtonClick">
+          {{ isLoggedIn ? 'ADD MY TASKS' : 'GET STARTED' }}
+        </button>
       </div>
       <div class="right-section">
         <img src="@/assets/img/carousel-2.png" alt="Task management illustration" />
@@ -16,8 +20,53 @@
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
-  name: 'LandingWelcome'
+  name: 'LandingWelcome',
+  data() {
+    return {
+      name: '' // Will hold the fetched username
+    }
+  },
+  computed: {
+    isLoggedIn() {
+      return !!localStorage.getItem('authToken')
+    }
+  },
+  methods: {
+    handleButtonClick() {
+      if (this.isLoggedIn) {
+        this.$router.push('/taskview') // Redirect to TaskView when logged in
+      } else {
+        this.$emit('triggerLoginPopup') // Trigger login popup when logged out
+      }
+    },
+    fetchUserName() {
+      const token = localStorage.getItem('authToken')
+      if (token) {
+        // Make an API request to fetch the user's name
+        axios
+          .get('https://todo.nafistech.com/api/user', {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          })
+          .then((response) => {
+            // Extract the username from the response and set it in data
+            this.name = response.data.name
+          })
+          .catch((error) => {
+            console.error('Error fetching user name:', error)
+          })
+      }
+    }
+  },
+  mounted() {
+    if (this.isLoggedIn) {
+      this.fetchUserName() // Fetch the user name when mounted if logged in
+    }
+  }
 }
 </script>
 
@@ -30,6 +79,10 @@ body {
   height: 100%;
 }
 
+.nafis {
+  color: #fff;
+}
+
 .main-container {
   width: 100%;
 }
@@ -40,8 +93,8 @@ body {
   width: 100%; /* Use 100% instead of 100vw */
   background: -webkit-linear-gradient(to right, #41b06e, #90d26d);
   background: linear-gradient(to right, #41b06e, #90d26d);
-  padding-left: 100px;
-  padding-right: 100px;
+  padding-left: 120px;
+  padding-right: 115px;
   margin: 0;
   box-sizing: initial;
 }

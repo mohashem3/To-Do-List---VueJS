@@ -32,8 +32,13 @@ export default {
   },
   methods: {
     getTasks() {
+      const token = localStorage.getItem('authToken')
       axios
-        .get('https://todo.nafistech.com/api/tasks')
+        .get('https://todo.nafistech.com/api/tasks', {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        })
         .then((res) => {
           this.tasks = res.data
           this.tasks.forEach((task) => {
@@ -46,9 +51,19 @@ export default {
           console.error('Error fetching tasks:', error)
         })
     },
+
     setTaskStatus(task, status) {
+      const token = localStorage.getItem('authToken')
       axios
-        .patch(`https://todo.nafistech.com/api/tasks/${task.id}`, { status })
+        .patch(
+          `https://todo.nafistech.com/api/tasks/${task.id}`,
+          { status },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          }
+        )
         .then(() => {
           task.status = status
           if (status === 'done') {
@@ -90,6 +105,7 @@ export default {
       this.scrollToForm()
     },
     deleteTask(taskId) {
+      const token = localStorage.getItem('authToken')
       Swal.fire({
         title: 'Are you sure?',
         text: "You won't be able to revert this!",
@@ -101,7 +117,11 @@ export default {
       }).then((result) => {
         if (result.isConfirmed) {
           axios
-            .delete(`https://todo.nafistech.com/api/tasks/${taskId}`)
+            .delete(`https://todo.nafistech.com/api/tasks/${taskId}`, {
+              headers: {
+                Authorization: `Bearer ${token}`
+              }
+            })
             .then(() => {
               this.tasks = this.tasks.filter((task) => task.id !== taskId)
               Swal.fire('Deleted!', 'Your task has been deleted.', 'success')

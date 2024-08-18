@@ -18,7 +18,7 @@ export default {
       <a href="mailto:mohamed222348@bue.edu.eg" class="social">
         <i class="fas fa-envelope"></i>
       </a>
-      <a href="https://github.com/your-github-username" class="social">
+      <a href="https://github.com/mohashem3" class="social">
         <i class="fab fa-github"></i>
       </a>
     </div>
@@ -28,7 +28,7 @@ export default {
       <a target="_blank" href="https://www.linkedin.com/in/mohamed-hashem-a19518210">
         Mohamed Hashem
       </a>
-      - VueJS Task 2
+      - VueJS Task 3
     </p>
   </footer>
 </template>
@@ -59,6 +59,7 @@ footer {
   text-align: center;
   padding: 10px 0; /* Padding for spacing */
   z-index: 999;
+  width: 101%;
 }
 
 footer p {

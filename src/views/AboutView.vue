@@ -25,7 +25,9 @@
               </div>
 
               <div class="btn-box">
-                <a href="#" class="theme-btn btn-style-one">Contact Us</a>
+                <a href="#" @click.prevent="toggleLoginPopup" class="theme-btn btn-style-one"
+                  >GET STARTED</a
+                >
               </div>
             </div>
           </div>
@@ -39,10 +41,7 @@
               </div>
               <figure class="image-1">
                 <a href="#" class="lightbox-image" data-fancybox="images"
-                  ><img
-                    title="Nafis To-Do"
-                    src="C:\Users\DELL\Desktop\To Do List - Final\src\assets\img\checklist-notebook.jpg"
-                    alt=""
+                  ><img title="Nafis To-Do" src="../assets/img/checklist-notebook.jpg" alt=""
                 /></a>
               </figure>
             </div>
@@ -50,8 +49,31 @@
         </div>
       </div>
     </section>
+
+    <!-- Include the login popup component -->
+    <Login :showPopup="showLoginPopup" @update:showPopup="showLoginPopup = $event" />
   </main>
 </template>
+
+<script>
+import Login from '@/components/Login.vue'
+
+export default {
+  components: {
+    Login
+  },
+  data() {
+    return {
+      showLoginPopup: false
+    }
+  },
+  methods: {
+    toggleLoginPopup() {
+      this.showLoginPopup = !this.showLoginPopup
+    }
+  }
+}
+</script>
 
 <style scoped>
 a,
