@@ -23,7 +23,7 @@
 <script>
 import axios from 'axios'
 import AlertNotifications from './AlertNotifications.vue'
-
+import Swal from 'sweetalert2'
 export default {
   props: {
     showPopup: Boolean
@@ -51,8 +51,14 @@ export default {
           this.$emit('update:showPopup', false) // Close popup
           this.$emit('login-success') // Notify parent component (NavBar)
 
-          // this.$refs.AlertNotifications.showSuccess('You have successfully logged in.')
-          // window.location.reload()
+          Swal.fire({
+            title: 'Login Successful',
+            text: 'You have successfully logged in.',
+            icon: 'success',
+            confirmButtonText: 'OK'
+          }).then(() => {
+            window.location.reload() // Refresh the page after clicking OK
+          })
         })
         .catch(() => {
           this.$refs.AlertNotifications.showError('Invalid email or password.')

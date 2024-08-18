@@ -63,7 +63,6 @@
 import Login from '@/components/Login.vue'
 import SignUp from '@/components/SignUp.vue'
 import Swal from 'sweetalert2'
-import axios from 'axios'
 
 export default {
   components: {
@@ -96,31 +95,6 @@ export default {
     toggleSignupPopup() {
       this.showSignupPopup = !this.showSignupPopup
     },
-    login(email, password) {
-      axios
-        .post('https://todo.nafistech.com/api/login', { email, password })
-        .then((response) => {
-          const { token } = response.data
-          localStorage.setItem('authToken', token) // Save token
-          this.$emit('update:showPopup', false) // Close popup
-
-          // Notify login success with SweetAlert2
-          Swal.fire({
-            icon: 'success',
-            title: 'You have successfully logged in!',
-            confirmButtonText: 'OK'
-          }).then(() => {
-            window.location.reload() // Refresh the page after clicking OK
-          })
-        })
-        .catch(() => {
-          Swal.fire({
-            icon: 'error',
-            title: 'Invalid email or password.',
-            confirmButtonText: 'OK'
-          })
-        })
-    },
     logout() {
       localStorage.removeItem('authToken') // Remove the token from local storage
       Swal.fire({
@@ -133,18 +107,18 @@ export default {
           window.location.reload() // Force page reload after confirmation
         })
       })
-    },
-    handleLoginSuccess() {
-      this.showLoginPopup = false
-      Swal.fire({
-        icon: 'success',
-        title: 'Logged In',
-        text: 'You have successfully logged out!',
-        confirmButtonText: 'OK'
-      }).then(() => {
-        window.location.reload() // Reload after OK
-      })
     }
+    // handleLoginSuccess() {
+    //   this.showLoginPopup = false
+    //   Swal.fire({
+    //     icon: 'success',
+    //     title: 'Logged In',
+    //     text: 'You have successfully logged out!',
+    //     confirmButtonText: 'OK'
+    //   }).then(() => {
+    //     window.location.reload() // Reload after OK
+    //   })
+    // }
   }
 }
 </script>

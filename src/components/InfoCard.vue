@@ -91,25 +91,12 @@
 </template>
 
 <script>
-import Swal from 'sweetalert2'
-
 export default {
   name: 'InfoCard',
   methods: {
     triggerLoginPopup() {
       // Emit event to parent component to show the login popup
       this.$emit('triggerLoginPopup')
-
-      // Listen for login success event and show SweetAlert2
-      this.$root.$on('login-success', () => {
-        Swal.fire({
-          icon: 'success',
-          title: 'You have successfully logged in!',
-          confirmButtonText: 'OK'
-        }).then(() => {
-          window.location.reload() // Refresh the page after confirmation
-        })
-      })
     }
   }
 }
