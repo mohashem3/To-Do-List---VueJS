@@ -117,7 +117,7 @@ export default {
         // Force page reload after showing success message
         setTimeout(() => {
           window.location.reload()
-        }, 1500) // Adjust timing if needed
+        }, 1500)
       } catch (error) {
         let errorMessage = 'Failed to create account.'
         if (error.response) {

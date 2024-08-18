@@ -108,17 +108,6 @@ export default {
         })
       })
     }
-    // handleLoginSuccess() {
-    //   this.showLoginPopup = false
-    //   Swal.fire({
-    //     icon: 'success',
-    //     title: 'Logged In',
-    //     text: 'You have successfully logged out!',
-    //     confirmButtonText: 'OK'
-    //   }).then(() => {
-    //     window.location.reload() // Reload after OK
-    //   })
-    // }
   }
 }
 </script>
