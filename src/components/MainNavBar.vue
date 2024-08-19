@@ -1,64 +1,3 @@
-<template>
-  <nav class="navbar navbar-expand-lg navbar-dark">
-    <div class="container">
-      <a class="navbar-brand" href="/">
-        <img src="@/assets/img/to-do.svg" alt="Home" class="todo-icon" />
-      </a>
-      <a class="navbar-brand" href="/"><strong>NAFIS TO-DO</strong></a>
-
-      <button
-        class="navbar-toggler"
-        type="button"
-        data-bs-toggle="collapse"
-        data-bs-target="#navbarSupportedContent"
-        aria-controls="navbarSupportedContent"
-        aria-expanded="false"
-        aria-label="Toggle navigation"
-      >
-        <span class="navbar-toggler-icon"></span>
-      </button>
-
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-          <li class="nav-item">
-            <router-link to="/" class="nav-link" exact-active-class="active">HOME</router-link>
-          </li>
-          <li class="nav-item">
-            <router-link to="/taskview" class="nav-link" exact-active-class="active"
-              >TO-DO</router-link
-            >
-          </li>
-          <li class="nav-item">
-            <router-link to="/about" class="nav-link" exact-active-class="active"
-              >ABOUT US</router-link
-            >
-          </li>
-
-          <li v-if="!isLoggedIn" class="nav-item">
-            <a class="nav-link" @click.prevent="toggleLoginPopup">LOG IN</a>
-          </li>
-
-          <li v-if="!isLoggedIn" class="nav-item">
-            <a class="nav-link" @click.prevent="toggleSignupPopup">SIGN UP</a>
-          </li>
-
-          <li v-if="isLoggedIn" class="nav-item">
-            <a class="nav-link" @click.prevent="logout">LOG OUT</a>
-          </li>
-        </ul>
-      </div>
-    </div>
-
-    <!-- Pass the login logic directly to the Login component -->
-    <Login
-      :showPopup="showLoginPopup"
-      @update:showPopup="showLoginPopup = $event"
-      @login-success="handleLoginSuccess"
-    />
-    <SignUp :showPopup="showSignupPopup" @update:showPopup="showSignupPopup = $event" />
-  </nav>
-</template>
-
 <script>
 import Login from '@/components/Login.vue'
 import SignUp from '@/components/SignUp.vue'
@@ -81,11 +20,9 @@ export default {
     }
   },
   created() {
-    // Listen for the custom event to show the login popup
     window.addEventListener('show-login-popup', this.toggleLoginPopup)
   },
   beforeUnmount() {
-    // Clean up the event listener when the component is destroyed
     window.removeEventListener('show-login-popup', this.toggleLoginPopup)
   },
   methods: {
@@ -96,7 +33,7 @@ export default {
       this.showSignupPopup = !this.showSignupPopup
     },
     logout() {
-      localStorage.removeItem('authToken') // Remove the token from local storage
+      localStorage.removeItem('authToken')
       Swal.fire({
         icon: 'success',
         title: 'Logged Out',
@@ -104,18 +41,76 @@ export default {
         confirmButtonText: 'OK'
       }).then(() => {
         this.$router.push('/').then(() => {
-          window.location.reload() // Force page reload after confirmation
+          window.location.reload()
         })
       })
     },
     handleLoginSuccess() {
       const intendedRoute = localStorage.getItem('intendedRoute') || '/'
-      localStorage.removeItem('intendedRoute') // Clear the intended route
+      localStorage.removeItem('intendedRoute')
       this.$router.push(intendedRoute)
     }
   }
 }
 </script>
+
+<template>
+  <nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container d-flex justify-content-between align-items-center position-relative">
+      <!-- Left section (Logo and Brand) -->
+      <div class="navbar-left d-flex align-items-center">
+        <a class="navbar-brand" href="/">
+          <img src="@/assets/img/to-do.svg" alt="Home" class="todo-icon" />
+        </a>
+        <a class="navbar-brand" href="/"><strong>NAFIS TO-DO</strong></a>
+      </div>
+
+      <!-- Center Links -->
+      <div class="navbar-center position-absolute start-50 translate-middle-x">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <router-link to="/" class="nav-link" exact-active-class="active">HOME</router-link>
+          </li>
+          <li class="nav-item">
+            <router-link to="/taskview" class="nav-link" exact-active-class="active"
+              >TO-DO</router-link
+            >
+          </li>
+          <li class="nav-item">
+            <router-link to="/about" class="nav-link" exact-active-class="active"
+              >ABOUT US</router-link
+            >
+          </li>
+        </ul>
+      </div>
+
+      <!-- Right Links -->
+      <div class="navbar-right d-flex">
+        <ul class="navbar-nav ms-auto">
+          <li v-if="!isLoggedIn" class="nav-item">
+            <a class="nav-link custom-nav-link" @click.prevent="toggleLoginPopup">LOG IN</a>
+          </li>
+          <li v-if="!isLoggedIn" class="nav-item">
+            <a class="nav-link custom-nav-link" @click.prevent="toggleSignupPopup">SIGN UP</a>
+          </li>
+          <li v-if="isLoggedIn" class="nav-item">
+            <a class="nav-link custom-nav-link-logout" @click.prevent="logout">
+              <span class="material-icons">logout</span> LOG OUT
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Login and SignUp Popups -->
+    <Login
+      :showPopup="showLoginPopup"
+      @update:showPopup="showLoginPopup = $event"
+      @login-success="handleLoginSuccess"
+    />
+    <SignUp :showPopup="showSignupPopup" @update:showPopup="showSignupPopup = $event" />
+  </nav>
+</template>
 
 <style scoped>
 .navbar {
@@ -127,18 +122,73 @@ export default {
   height: 40px;
   vertical-align: middle;
 }
+.navbar-left,
+.navbar-right {
+  display: flex;
+  align-items: center;
+}
+.navbar-center {
+  text-align: center;
+}
+.navbar-center ul {
+  display: flex;
+  justify-content: center;
+}
 .nav-link {
   color: white;
-  transition:
-    color 0.3s,
-    transform 0.3s;
   cursor: pointer;
 }
 .nav-link:hover {
   color: #41b883;
-  transform: scale(1.1);
+  cursor: pointer;
 }
 .nav-link.active {
   color: #41b883;
+}
+
+/* Custom styles for the Sign Up, Login, and Logout links */
+.custom-nav-link-logout {
+  background-color: #2c8b5f;
+  color: white !important;
+  padding: 5px 15px;
+  border-radius: 5px;
+  width: 110px;
+  text-align: center;
+  margin-right: 10px;
+  display: inline-block;
+  transition: background-color 0.3s ease;
+}
+
+.custom-nav-link {
+  background-color: #2c8b5f;
+  color: white !important;
+  padding: 5px 15px;
+  border-radius: 5px;
+  width: 90px;
+  text-align: center;
+  margin-right: 10px;
+  display: inline-block;
+  transition: background-color 0.3s ease;
+}
+
+.custom-nav-link:hover {
+  background-color: #41b883;
+  color: white !important;
+}
+
+.custom-nav-link-logout:hover {
+  background-color: #41b883;
+  color: white !important;
+}
+
+/* Adjust Logout link icon styling */
+.material-icons {
+  vertical-align: middle;
+  margin-right: 1px;
+  font-size: 20px;
+}
+
+.navbar-right .nav-item:last-child .custom-nav-link {
+  margin-right: 0;
 }
 </style>

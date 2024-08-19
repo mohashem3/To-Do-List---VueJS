@@ -1,7 +1,7 @@
 <template>
   <div v-if="showPopup" class="overlay" @click.self="closePopup">
     <div class="wrapper animate">
-      <div class="title">Login Form</div>
+      <div class="title">LOG IN</div>
       <form @submit.prevent="login">
         <div class="field">
           <input type="text" required v-model="email" />
@@ -11,9 +11,12 @@
           <input type="password" required v-model="password" />
           <label>Password</label>
         </div>
-        <div class="field">
-          <input type="submit" value="Login" />
+        <div class="field login-button">
+          <input type="submit" :disabled="loading" value="Login" />
         </div>
+        <!-- <div class="signup-link">
+          Not a member? <a href="#" @click.prevent="openSignUp">Signup now</a>
+        </div> -->
       </form>
     </div>
   </div>
@@ -24,9 +27,11 @@
 import axios from 'axios'
 import AlertNotifications from './AlertNotifications.vue'
 import Swal from 'sweetalert2'
+
 export default {
   props: {
-    showPopup: Boolean
+    showPopup: Boolean,
+    showSignUpPopup: Boolean
   },
   components: {
     AlertNotifications
@@ -34,7 +39,8 @@ export default {
   data() {
     return {
       email: '',
-      password: ''
+      password: '',
+      loading: false
     }
   },
   methods: {
@@ -48,7 +54,7 @@ export default {
           const { token } = response.data
           localStorage.setItem('authToken', token) // Save token
 
-          this.$emit('update:showPopup', false) // Close popup
+          this.$emit('update:showPopup', false) // Close login popup
           this.$emit('login-success') // Notify parent component (NavBar)
 
           Swal.fire({
@@ -66,6 +72,10 @@ export default {
     },
     closePopup() {
       this.$emit('update:showPopup', false)
+    },
+    openSignUp() {
+      this.$emit('update:showPopup', false) // Close login popup
+      this.$emit('open-signup') // Emit event to open sign-up popup
     }
   }
 }
@@ -120,7 +130,7 @@ button {
   line-height: 100px;
   color: #fff;
   border-radius: 15px 15px 0 0;
-  background: linear-gradient(-135deg, #c850c0, #4158d0);
+  background: linear-gradient(-135deg, #41b06e, #90d26d);
 }
 
 form {
@@ -144,9 +154,17 @@ form {
   transition: all 0.3s ease;
 }
 
+.field input[type='submit']:hover {
+  background: linear-gradient(135deg, #41b06e, #90d26d);
+}
+
+.login-button input {
+  padding-left: 0px;
+}
+
 .field input:focus,
 .field input:valid {
-  border-color: #4158d0;
+  border-color: #41b883;
 }
 
 .field label {
@@ -164,7 +182,7 @@ form {
 .field input:valid ~ label {
   top: 0;
   font-size: 16px;
-  color: #4158d0;
+  color: #41b883;
   background: white;
   padding: 0 5px;
   transform: translateY(-50%);
@@ -184,12 +202,12 @@ form {
 
 .pass-link a {
   text-decoration: none;
-  color: #4158d0;
+  color: #41b883;
 }
 
 .field input[type='submit'] {
   width: 100%;
-  background: linear-gradient(-135deg, #c850c0, #4158d0);
+  background: linear-gradient(-135deg, #41b06e, #90d26d);
   border: none;
   color: white;
   font-size: 20px;
@@ -203,7 +221,7 @@ form {
 }
 
 .signup-link a {
-  color: #4158d0;
+  color: #41b883;
   text-decoration: none;
 }
 
@@ -224,6 +242,23 @@ form {
   100% {
     transform: scale(1);
     opacity: 1;
+  }
+}
+
+.spinner {
+  width: 25px;
+  height: 25px;
+  border: 4px solid white;
+  border-top: 4px solid transparent;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
   }
 }
 </style>

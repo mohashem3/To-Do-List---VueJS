@@ -1,32 +1,47 @@
 <template>
   <div v-if="showPopup" class="overlay" @click.self="closePopup">
     <div class="wrapper animate">
-      <div class="title">SignUp Form</div>
-      <form @submit.prevent="validateForm">
-        <div :class="['field', { invalid: nameError }]">
-          <input type="text" v-model="name" @keyup="checkName" required />
+      <div class="title">SIGN UP</div>
+      <form ref="form" @submit.prevent="validateForm">
+        <div class="field">
+          <input
+            type="text"
+            v-model="name"
+            required
+            pattern=".+"
+            title="Please fill out this field."
+          />
           <label>Full Name</label>
-          <span v-if="nameError" class="error-message">Name is required</span>
         </div>
-        <div :class="['field', { invalid: emailError }]">
-          <input type="text" v-model="email" @keyup="checkEmail" required />
+        <div class="field">
+          <input
+            type="email"
+            v-model="email"
+            required
+            pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
+            title="Please enter a valid email address."
+          />
           <label>Email Address</label>
-          <span v-if="emailError" class="error-message">Invalid Email</span>
         </div>
-        <div :class="['field', { invalid: passwordError }]">
-          <input type="password" v-model="password" @keyup="validatePassword" required />
+        <div class="field">
+          <input
+            type="password"
+            v-model="password"
+            required
+            pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}"
+            title="Password must be at least 8 characters, including uppercase and lowercase letters, a number, and a special character."
+          />
           <label>Password</label>
-          <span v-if="passwordError" class="error-message">Invalid Password</span>
         </div>
-        <div :class="['field', { invalid: confirmPasswordError }]">
+        <div class="field">
           <input
             type="password"
             v-model="confirmpassword"
-            @keyup="validateConfirmPassword"
             required
+            :pattern="password"
+            title="Passwords must match."
           />
           <label>Confirm Password</label>
-          <span v-if="confirmPasswordError" class="error-message">Passwords do not match</span>
         </div>
         <div>
           <button type="submit" class="submit-btn" :disabled="loading">
@@ -34,7 +49,6 @@
             <span v-else>Create an account</span>
           </button>
         </div>
-        <div class="signup-link">Already have an account? <a href="#">Log In</a></div>
       </form>
     </div>
   </div>
@@ -58,41 +72,21 @@ export default {
       email: '',
       password: '',
       confirmpassword: '',
-      nameError: false,
-      emailError: false,
-      passwordError: false,
-      confirmPasswordError: false,
       loading: false
     }
   },
   methods: {
-    checkName() {
-      this.nameError = !this.name
-    },
-    checkEmail() {
-      const emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/
-      this.emailError = !emailPattern.test(this.email)
-    },
-    validatePassword() {
-      const passPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/
-      this.passwordError = !passPattern.test(this.password)
-    },
-    validateConfirmPassword() {
-      this.confirmPasswordError = this.password !== this.confirmpassword || !this.confirmpassword
-    },
     validateForm() {
-      this.checkName()
-      this.checkEmail()
-      this.validatePassword()
-      this.validateConfirmPassword()
-
-      if (
-        !this.nameError &&
-        !this.emailError &&
-        !this.passwordError &&
-        !this.confirmPasswordError
-      ) {
+      const form = this.$refs.form
+      if (form.checkValidity()) {
+        // Additional check for password match
+        if (this.password !== this.confirmpassword) {
+          this.$refs.AlertNotifications.showError('Passwords do not match.')
+          return
+        }
         this.signup()
+      } else {
+        form.reportValidity() // Show validation messages
       }
     },
     async signup() {
@@ -109,12 +103,10 @@ export default {
         const response = await axios.post('https://todo.nafistech.com/api/register', requestData)
         const token = response.data.token
         localStorage.setItem('authToken', token)
-        // localStorage.setItem('userName', user.name)
 
         this.$emit('update:showPopup', false)
         this.$refs.AlertNotifications.showSuccess('Account created successfully!')
 
-        // Force page reload after showing success message
         setTimeout(() => {
           window.location.reload()
         }, 1500)
@@ -132,12 +124,18 @@ export default {
     },
     closePopup() {
       this.$emit('update:showPopup', false)
+    },
+    openLogin() {
+      this.$emit('update:showPopup', false) // Close sign-up popup
+      this.$emit('open-login') // Emit event to open login popup
     }
   }
 }
 </script>
 
 <style scoped>
+/* Remove custom error message styles */
+
 @import url('https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap');
 
 * {
@@ -186,7 +184,7 @@ button {
   line-height: 100px;
   color: #fff;
   border-radius: 15px 15px 0 0;
-  background: linear-gradient(-135deg, #c850c0, #4158d0);
+  background: linear-gradient(-135deg, #41b06e, #90d26d);
 }
 
 form {
@@ -200,21 +198,6 @@ form {
   position: relative;
 }
 
-/* Add the invalid class to input fields for error handling */
-.field.invalid input {
-  border-color: red;
-}
-
-/* Error message styling */
-.error-message {
-  color: red;
-  font-size: 0.8em;
-  position: absolute;
-  top: 100%;
-  left: 20px;
-  transform: translateY(5px);
-}
-
 .field input {
   width: 100%;
   padding-left: 20px;
@@ -223,11 +206,12 @@ form {
   border: 1px solid lightgrey;
   border-radius: 25px;
   transition: all 0.3s ease;
+  margin-bottom: 20px;
 }
 
 .field input:focus,
 .field input:valid {
-  border-color: #4158d0;
+  border-color: #41b883;
 }
 
 .field label {
@@ -239,43 +223,33 @@ form {
   font-weight: 400;
   font-size: 17px;
   transition: all 0.3s ease;
+  padding-bottom: 17px;
 }
 
 .field input:focus ~ label,
 .field input:valid ~ label {
   top: 0;
   font-size: 16px;
-  color: #4158d0;
+  color: #41b883;
   background: white;
   padding: 0 5px;
   transform: translateY(-50%);
 }
 
-.content {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 20px;
-}
-
-.checkbox {
-  display: flex;
-  align-items: center;
-}
-
-.pass-link a {
-  text-decoration: none;
-  color: #4158d0;
-}
-
 .submit-btn {
   width: 100%;
-  background: linear-gradient(-135deg, #c850c0, #4158d0);
+  background: linear-gradient(-135deg, #41b06e, #90d26d);
   border: none;
   color: white;
   font-size: 20px;
   border-radius: 25px;
   cursor: pointer;
+  margin-top: 15px;
+  transition: background-color 1s ease;
+}
+
+.submit-btn:hover {
+  background: linear-gradient(135deg, #41b06e, #90d26d);
 }
 
 .signup-link {
@@ -284,7 +258,7 @@ form {
 }
 
 .signup-link a {
-  color: #4158d0;
+  color: #41b883;
   text-decoration: none;
 }
 

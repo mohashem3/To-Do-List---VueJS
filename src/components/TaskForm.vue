@@ -194,8 +194,8 @@ button {
 }
 
 button:hover {
-  background-color: #a8cd9f; /* Hover background color */
-  width: 55px; /* Adjust width as needed */
+  background-color: #005e06; /* Hover background color */
+  /* Adjust width as needed */
 }
 
 button:active {
