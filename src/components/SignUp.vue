@@ -58,7 +58,7 @@
 <script>
 import Swal from 'sweetalert2'
 import AlertNotifications from './AlertNotifications.vue'
-
+import axios from 'axios'
 export default {
   props: {
     showPopup: Boolean
@@ -115,7 +115,7 @@ export default {
         this.$refs.AlertNotifications.showSuccess('Account created successfully!')
 
         setTimeout(() => {
-          window.location.reload()
+          this.$router.go(0)
         }, 1500)
       } catch (error) {
         let errorMessage = 'Failed to create account.'

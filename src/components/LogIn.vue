@@ -80,7 +80,7 @@ export default {
             icon: 'success',
             confirmButtonText: 'OK'
           }).then(() => {
-            window.location.reload() // Refresh the page after clicking OK
+            this.$router.go(0) // Refresh the page after clicking OK
           })
         })
         .catch(() => {

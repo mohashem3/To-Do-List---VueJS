@@ -41,7 +41,7 @@ export default {
         confirmButtonText: 'OK'
       }).then(() => {
         this.$router.push('/').then(() => {
-          window.location.reload()
+          this.$router.go(0)
         })
       })
     },
