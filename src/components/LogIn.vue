@@ -33,6 +33,23 @@ export default {
     showPopup: Boolean
     // showSignUpPopup: Boolean
   },
+  beforeRouteEnter(to, from, next) {
+    const isLoggedIn = !!localStorage.getItem('authToken')
+    if (isLoggedIn) {
+      // Show SweetAlert notification if the user is logged in and tries to access the signup page
+      Swal.fire({
+        title: 'Already Logged In',
+        text: 'You are already logged in.',
+        icon: 'info',
+        confirmButtonText: 'OK'
+      }).then(() => {
+        next(false) // Prevent navigation to the signup page
+        history.back() // Navigate back to the previous page
+      })
+    } else {
+      next() // Allow navigation if not logged in
+    }
+  },
   components: {
     AlertNotifications
   },

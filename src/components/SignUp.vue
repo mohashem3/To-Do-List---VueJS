@@ -49,9 +49,6 @@
             <span v-else>Create an account</span>
           </button>
         </div>
-        <!-- <div class="signup-link">
-          Already a member? <a href="#" @click.prevent="openLogin">Log In now</a>
-        </div> -->
       </form>
     </div>
   </div>
@@ -59,30 +56,37 @@
 </template>
 
 <script>
-import axios from 'axios'
+import Swal from 'sweetalert2'
 import AlertNotifications from './AlertNotifications.vue'
 
 export default {
-  components: {
-    AlertNotifications
-  },
   props: {
     showPopup: Boolean
   },
-  data() {
-    return {
-      name: '',
-      email: '',
-      password: '',
-      confirmpassword: '',
-      loading: false
+  components: {
+    AlertNotifications
+  },
+  beforeRouteEnter(to, from, next) {
+    const isLoggedIn = !!localStorage.getItem('authToken')
+    if (isLoggedIn) {
+      // Show SweetAlert notification if the user is logged in and tries to access the signup page
+      Swal.fire({
+        title: 'Already Logged In',
+        text: 'You are already logged in.',
+        icon: 'info',
+        confirmButtonText: 'OK'
+      }).then(() => {
+        next(false) // Prevent navigation to the signup page
+        history.back() // Navigate back to the previous page
+      })
+    } else {
+      next() // Allow navigation if not logged in
     }
   },
   methods: {
     validateForm() {
       const form = this.$refs.form
       if (form.checkValidity()) {
-        // Additional check for password match
         if (this.password !== this.confirmpassword) {
           this.$refs.AlertNotifications.showError('Passwords do not match.')
           return
@@ -115,10 +119,8 @@ export default {
         }, 1500)
       } catch (error) {
         let errorMessage = 'Failed to create account.'
-        if (error.response) {
-          if (error.response.data && error.response.data.message) {
-            errorMessage = error.response.data.message
-          }
+        if (error.response && error.response.data.message) {
+          errorMessage = error.response.data.message
         }
         this.$refs.AlertNotifications.showError(errorMessage)
       } finally {
@@ -128,10 +130,6 @@ export default {
     closePopup() {
       this.$emit('update:showPopup', false)
     }
-    // openLogin() {
-    //   this.$emit('update:showPopup', false)
-    //   this.$emit('open-login') // Ensure this matches the event name in App.vue
-    // }
   }
 }
 </script>
