@@ -15,7 +15,7 @@
           <input type="submit" :disabled="loading" value="Login" />
         </div>
         <!-- <div class="signup-link">
-          Not a member? <a href="#" @click.prevent="openSignUp">Signup now</a>
+          Not a member? <a href="#" @click.prevent="openSignUp">Sign Up now</a>
         </div> -->
       </form>
     </div>
@@ -74,8 +74,8 @@ export default {
       this.$emit('update:showPopup', false)
     },
     openSignUp() {
-      this.$emit('update:showPopup', false) // Close login popup
-      this.$emit('open-signup') // Emit event to open sign-up popup
+      this.$emit('update:showPopup', false)
+      this.$emit('open-signup') // Ensure this matches the event name in App.vue
     }
   }
 }

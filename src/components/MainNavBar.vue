@@ -88,10 +88,20 @@ export default {
       <div class="navbar-right d-flex">
         <ul class="navbar-nav ms-auto">
           <li v-if="!isLoggedIn" class="nav-item">
-            <a class="nav-link custom-nav-link" @click.prevent="toggleLoginPopup">LOG IN</a>
+            <a
+              class="nav-link custom-nav-link"
+              @click.prevent="toggleLoginPopup"
+              @click="$emit('open-login')"
+              >LOG IN</a
+            >
           </li>
           <li v-if="!isLoggedIn" class="nav-item">
-            <a class="nav-link custom-nav-link" @click.prevent="toggleSignupPopup">SIGN UP</a>
+            <a
+              class="nav-link custom-nav-link"
+              @click.prevent="toggleSignupPopup"
+              @click="$emit('open-signup')"
+              >SIGN UP</a
+            >
           </li>
           <li v-if="isLoggedIn" class="nav-item">
             <a class="nav-link custom-nav-link-logout" @click.prevent="logout">

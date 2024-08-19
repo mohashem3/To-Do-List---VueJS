@@ -49,6 +49,9 @@
             <span v-else>Create an account</span>
           </button>
         </div>
+        <!-- <div class="signup-link">
+          Already a member? <a href="#" @click.prevent="openLogin">Log In now</a>
+        </div> -->
       </form>
     </div>
   </div>
@@ -126,8 +129,8 @@ export default {
       this.$emit('update:showPopup', false)
     },
     openLogin() {
-      this.$emit('update:showPopup', false) // Close sign-up popup
-      this.$emit('open-login') // Emit event to open login popup
+      this.$emit('update:showPopup', false)
+      this.$emit('open-login') // Ensure this matches the event name in App.vue
     }
   }
 }
