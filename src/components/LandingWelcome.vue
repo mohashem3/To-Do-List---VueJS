@@ -39,7 +39,7 @@ export default {
       if (this.isLoggedIn) {
         this.$router.push('/taskview') // Redirect to TaskView when logged in
       } else {
-        this.$emit('triggerLoginPopup') // Trigger login popup when logged out
+        this.$emit('triggerSignupPopup') // Trigger login popup when logged out
       }
     },
     fetchUserName() {

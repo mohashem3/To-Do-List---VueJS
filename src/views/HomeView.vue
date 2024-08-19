@@ -1,16 +1,16 @@
 <template>
   <main>
-    <LandingWelcome @triggerLoginPopup="toggleLoginPopup" />
+    <LandingWelcome @triggerSignupPopup="toggleSignupPopup" />
 
     <!-- When logged out -->
-    <InfoCard v-if="!isLoggedIn" @triggerLoginPopup="toggleLoginPopup" />
+    <InfoCard v-if="!isLoggedIn" @triggerSignupPopup="toggleSignupPopup" />
 
     <!-- When logged in -->
     <TaskStatistics v-if="isLoggedIn" />
     <TaskTable v-if="isLoggedIn" :showActions="false" :showTextBox="false" />
 
     <!-- Login popup -->
-    <Login :showPopup="showLoginPopup" @update:showPopup="showLoginPopup = $event" />
+    <SignUp :showPopup="showSignupPopup" @update:showPopup="showSignupPopup = $event" />
   </main>
 </template>
 
@@ -19,7 +19,8 @@ import TaskTable from '../components/TaskTable.vue'
 import LandingWelcome from '../components/LandingWelcome.vue'
 import TaskStatistics from '../components/TaskStatistics.vue'
 import InfoCard from '../components/InfoCard.vue'
-import Login from '../components/Login.vue'
+
+import SignUp from '@/components/SignUp.vue'
 
 export default {
   components: {
@@ -27,11 +28,11 @@ export default {
     TaskTable,
     TaskStatistics,
     InfoCard,
-    Login
+    SignUp
   },
   data() {
     return {
-      showLoginPopup: false
+      showSignupPopup: false
     }
   },
   computed: {
@@ -40,9 +41,9 @@ export default {
     }
   },
   methods: {
-    toggleLoginPopup() {
+    toggleSignupPopup() {
       // Toggle the login popup visibility
-      this.showLoginPopup = !this.showLoginPopup
+      this.showSignupPopup = !this.showSignupPopup
     }
   }
 }

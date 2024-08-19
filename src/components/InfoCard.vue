@@ -7,7 +7,7 @@
         <strong>NAFIS TO-DO</strong> tracks all the tasks for the day as you scheduled.
       </p>
       <p class="info">You will never have to worry about your daily tasks.</p>
-      <button class="button" @click="triggerLoginPopup">
+      <button class="button" @click="triggerSignupPopup">
         <span>Learn more</span>
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -66,7 +66,7 @@
             <span><strong>Update</strong> Task Status</span>
           </li>
         </ul>
-        <button class="button" @click="triggerLoginPopup">Choose Plan</button>
+        <button class="button" @click="triggerSignupPopup">Choose Plan</button>
       </div>
     </article>
 
@@ -97,6 +97,10 @@ export default {
     triggerLoginPopup() {
       // Emit event to parent component to show the login popup
       this.$emit('triggerLoginPopup')
+    },
+    triggerSignupPopup() {
+      // Emit event to parent component to show the login popup
+      this.$emit('triggerSignupPopup')
     }
   }
 }
