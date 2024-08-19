@@ -25,7 +25,7 @@
               </div>
 
               <div class="btn-box">
-                <a href="#" @click.prevent="toggleLoginPopup" class="theme-btn btn-style-one"
+                <a href="#" @click.prevent="toggleSignupPopup" class="theme-btn btn-style-one"
                   >GET STARTED</a
                 >
               </div>
@@ -50,26 +50,30 @@
       </div>
     </section>
 
-    <!-- Include the login popup component -->
-    <Login :showPopup="showLoginPopup" @update:showPopup="showLoginPopup = $event" />
+    <!-- Conditionally render the SignUp component -->
+    <SignUp
+      v-if="showSignupPopup"
+      :showPopup="showSignupPopup"
+      @update:showPopup="showSignupPopup = $event"
+    />
   </main>
 </template>
 
 <script>
-import Login from '@/components/Login.vue'
+import SignUp from '@/components/SignUp.vue'
 
 export default {
   components: {
-    Login
+    SignUp
   },
   data() {
     return {
-      showLoginPopup: false
+      showSignupPopup: false
     }
   },
   methods: {
-    toggleLoginPopup() {
-      this.showLoginPopup = !this.showLoginPopup
+    toggleSignupPopup() {
+      this.showSignupPopup = !this.showSignupPopup
     }
   }
 }

@@ -127,11 +127,11 @@ export default {
     },
     closePopup() {
       this.$emit('update:showPopup', false)
-    },
-    openLogin() {
-      this.$emit('update:showPopup', false)
-      this.$emit('open-login') // Ensure this matches the event name in App.vue
     }
+    // openLogin() {
+    //   this.$emit('update:showPopup', false)
+    //   this.$emit('open-login') // Ensure this matches the event name in App.vue
+    // }
   }
 }
 </script>

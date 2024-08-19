@@ -30,8 +30,8 @@ import Swal from 'sweetalert2'
 
 export default {
   props: {
-    showPopup: Boolean,
-    showSignUpPopup: Boolean
+    showPopup: Boolean
+    // showSignUpPopup: Boolean
   },
   components: {
     AlertNotifications
@@ -72,11 +72,11 @@ export default {
     },
     closePopup() {
       this.$emit('update:showPopup', false)
-    },
-    openSignUp() {
-      this.$emit('update:showPopup', false)
-      this.$emit('open-signup') // Ensure this matches the event name in App.vue
     }
+    // openSignUp() {
+    //   this.$emit('update:showPopup', false)
+    //   this.$emit('open-signup') // Ensure this matches the event name in App.vue
+    // }
   }
 }
 </script>
